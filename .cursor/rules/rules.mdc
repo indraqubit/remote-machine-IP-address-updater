@@ -1,0 +1,214 @@
+---
+alwaysApply: true
+---
+
+## Purpose
+
+This document defines **non-negotiable project rules**.
+If code, tests, tools, or humans violate these rules, **the change is rejected**.
+
+No debate. No exceptions.
+
+---
+
+## GLOBAL RULES
+
+### Language & Platform
+
+* Swift 5.9+
+* macOS 13+
+* Apple frameworks only
+* No third-party dependencies
+* No SDKs
+* No package managers
+
+---
+
+### Architecture
+
+* Two targets only:
+
+  * Panel
+  * Agent
+* Hard separation
+* No shared runtime code
+* No circular knowledge
+
+```
+Panel → config.json → Agent
+Panel → launchctl
+Agent → state.json
+```
+
+Anything else is forbidden.
+
+---
+
+## AGENT RULES (ABSOLUTE)
+
+The agent must:
+
+* Be headless
+* Be event-driven
+* Exit after one decision
+* Own runtime state only
+
+The agent must NEVER:
+
+```
+- Show UI
+- Poll
+- Retry
+- Loop indefinitely
+- Cache config
+- Modify config
+- Depend on panel code
+- Perform background monitoring
+```
+
+If assumptions fail → **exit silently**.
+
+Silence is success.
+
+---
+
+## PANEL RULES (ABSOLUTE)
+
+The panel must:
+
+* Be foreground only
+* Be user-launched
+* Edit configuration only
+* Control enable/disable via launchctl
+
+The panel must NEVER:
+
+```
+- Detect Wi-Fi
+- Resolve IP
+- Read or write state.json
+- Send network requests
+- Trigger agent execution
+- Run in background
+```
+
+Panel logic ends at **Save**.
+
+---
+
+## CONFIG RULES
+
+* JSON only
+* Full snapshot writes
+* Atomic writes
+* Owned by panel
+* Read-only for agent
+
+Forbidden in config:
+
+```
+SSID
+IP
+Timestamps
+State
+Secrets
+Debug flags
+```
+
+Config is **law**, not cache.
+
+---
+
+## STATE RULES
+
+* Owned by agent only
+* Written only after successful email
+* Never user-visible
+* Never user-editable
+
+Missing or corrupt state is **not an error**.
+
+---
+
+## NETWORK RULES
+
+* Wi-Fi only
+* IPv4 only
+* RFC1918 only
+* Ignore:
+
+  * 127.0.0.1
+  * 169.254.x.x
+* One email per execution
+* No retries
+* Silent failure
+
+---
+
+## TDD RULES (HYBRID)
+
+* Contract tests first
+* Behavior tests second
+* Implementation last
+* No test → no behavior
+* Tests describe behavior, not implementation
+
+You may sketch structs early.
+You may NOT change contracts to satisfy code.
+
+---
+
+## TOOLING RULES (CURSOR)
+
+Cursor is a **code generator**, not an architect.
+
+If Cursor:
+
+* Merges agent + panel
+* Adds libraries
+* Adds retries / loops
+* Adds observers or timers
+* Adds “nice to have” abstractions
+
+→ Stop and regenerate.
+
+---
+
+## CHANGE RULES
+
+A change is rejected if it:
+
+```
+- Breaks separation
+- Adds hidden coupling
+- Introduces background behavior
+- Requires explaining instead of testing
+```
+
+If change requires:
+
+* New field → bump version
+* New behavior → add tests first
+
+---
+
+## FAILURE PHILOSOPHY
+
+* Deterministic > clever
+* Exit > recover
+* Silence > noise
+* Boring > magical
+
+If unsure → **do nothing**.
+
+---
+
+## FINAL RULE
+
+If you have to ask
+“is this allowed?”
+
+It probably isn’t.
+
+---
+
