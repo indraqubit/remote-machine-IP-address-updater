@@ -14,7 +14,8 @@ class NetworkDetector {
         ] as CFArray
         
         guard let dict = SCDynamicStoreCopyMultiple(store, nil, patterns) else {
-            throw NetworkError.noWiFi
+            // No Wi-Fi network found - check if we have Ethernet
+            return try detectActiveInterface()
         }
         
         for (_, value) in dict as NSDictionary {
@@ -23,6 +24,40 @@ class NetworkDetector {
                     return ssid
                 }
             }
+        }
+        
+        // No SSID found in Wi-Fi - try interface name
+        return try detectActiveInterface()
+    }
+    
+    private func detectActiveInterface() throws -> String {
+        var ifaddr: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddr) == 0 else {
+            throw NetworkError.noInterfaces
+        }
+        defer { freeifaddrs(ifaddr) }
+        
+        var ptr = ifaddr
+        while ptr != nil {
+            defer { ptr = ptr?.pointee.ifa_next }
+            
+            guard let interface = ptr?.pointee,
+                  interface.ifa_addr != nil else {
+                continue
+            }
+            
+            let addrFamily = interface.ifa_addr.pointee.sa_family
+            if addrFamily != UInt8(AF_INET) {
+                continue
+            }
+            
+            let name = String(cString: interface.ifa_name)
+            guard name.hasPrefix("en") else {
+                continue
+            }
+            
+            // Found active en* interface - return it
+            return name == "en0" ? "Wi-Fi" : "Ethernet (\(name))"
         }
         
         throw NetworkError.noWiFi
