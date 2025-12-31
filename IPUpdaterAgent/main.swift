@@ -21,11 +21,11 @@ let historyURL = FileManager.default.homeDirectoryForCurrentUser
     .appendingPathComponent("IPUpdater")
     .appendingPathComponent("history.json")
 
-let configManager = ConfigManager(configURL: configURL)
-let stateManager = StateManager(stateURL: stateURL)
-let historyManager = StateHistoryManager(historyURL: historyURL)
-let networkDetector = NetworkDetector()
-let emailSender = EmailSender()
+let configManager: ConfigManaging = ConfigManager(configURL: configURL)
+let stateManager: StateManaging = StateManager(stateURL: stateURL)
+let historyManager: StateHistoryManaging = StateHistoryManager(historyURL: historyURL)
+let networkDetector: NetworkDetecting = NetworkDetector()
+let emailSender: EmailSending = EmailSender()
 
 let agent = Agent(
     configManager: configManager,

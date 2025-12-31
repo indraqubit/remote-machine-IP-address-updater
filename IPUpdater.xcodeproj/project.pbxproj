@@ -1,0 +1,632 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0ED129A67BB82BFEE1138011 /* PanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725EC156D911A841A859B511 /* PanelViewModel.swift */; };
+		1C78D514D02EC9D25CC747C7 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC289C00A4BE852D669849 /* KeychainManager.swift */; };
+		1C993F45B6E6D37FA0932783 /* EmailSenderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439EBECE68E0F862C373E5BA /* EmailSenderProtocol.swift */; };
+		206CCA028AD04E298A03B5AE /* Agent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524461D4C00D98C40CFC6F56 /* Agent.swift */; };
+		2815D801675172D7DEB7146B /* StateContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12087468E19217DF60560889 /* StateContractTests.swift */; };
+		40B3D360B5CFD1B3CD2CDE5E /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A762A9192BDEFB2B74170D /* PanelView.swift */; };
+		4643BEF2A7E0896B59852A7B /* PanelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD4F211120C1E9CE80D6978 /* PanelApp.swift */; };
+		4B74E379F8E14903E7C90BDB /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB54E7FD039651DB2161F4FD /* StateHistory.swift */; };
+		583BFCC18690DCDCCF112355 /* PanelBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836CE4806B14DE0DA1BFBC45 /* PanelBehaviorTests.swift */; };
+		67AFEF67F788139A6F56C400 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49E87B76615C1C2D037F1A6 /* Config.swift */; };
+		7F5F6D3DE53E82811BB1C40C /* StateManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0DE51439DD2F6604DB4DCE /* StateManagerProtocol.swift */; };
+		A27538DF547433AF63862E62 /* PanelConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC120437F0E914639C2D7A6B /* PanelConfigManager.swift */; };
+		A55CF5DAFC3557BD47EED2E5 /* ConfigManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F7F5FC7680B1C1DC3F2D23 /* ConfigManagerProtocol.swift */; };
+		B86186715721B382EAF42BEA /* NetworkDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BCFAF4C41AAA795995FB49 /* NetworkDetectorProtocol.swift */; };
+		C35221A19B71E60242A9FD07 /* AgentBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA2E93D55D876471264E474 /* AgentBehaviorTests.swift */; };
+		D3B435753C590D9C845ECCBA /* LaunchctlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2B0F8D52D4C1716010F4D5 /* LaunchctlManager.swift */; };
+		DB4E50DAC771F4932B43DEFC /* ConfigContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CED3EF6DADAFA60AF5B1275 /* ConfigContractTests.swift */; };
+		E1D5CBC422FF0A4C575D0A83 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16636E0581084BB98C988815 /* main.swift */; };
+		E3B19A8C83CEDDD8CFC299B5 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31B7A86781514FB194F7B35 /* Config.swift */; };
+		FED61DFC813C50AD8F697654 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A677D65D42C33100CFDD4 /* State.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BCF11D3699FBFA2380340961 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 197D3B15A7D848C59668A56C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9F00C70B587D01F09CA4D35E;
+			remoteInfo = IPUpdaterAgent;
+		};
+		ED78C94BA4655F93E903DD32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 197D3B15A7D848C59668A56C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AE053C4883FB8701503E79DF;
+			remoteInfo = IPUpdaterPanel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0CA2E93D55D876471264E474 /* AgentBehaviorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentBehaviorTests.swift; sourceTree = "<group>"; };
+		0CED3EF6DADAFA60AF5B1275 /* ConfigContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigContractTests.swift; sourceTree = "<group>"; };
+		12087468E19217DF60560889 /* StateContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateContractTests.swift; sourceTree = "<group>"; };
+		16636E0581084BB98C988815 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		2B11F516B09BA22111964CA3 /* IPUpdaterAgentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IPUpdaterAgentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		38BC289C00A4BE852D669849 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		439EBECE68E0F862C373E5BA /* EmailSenderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSenderProtocol.swift; sourceTree = "<group>"; };
+		524461D4C00D98C40CFC6F56 /* Agent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Agent.swift; sourceTree = "<group>"; };
+		53BCFAF4C41AAA795995FB49 /* NetworkDetectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDetectorProtocol.swift; sourceTree = "<group>"; };
+		725EC156D911A841A859B511 /* PanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelViewModel.swift; sourceTree = "<group>"; };
+		74A762A9192BDEFB2B74170D /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
+		836CE4806B14DE0DA1BFBC45 /* PanelBehaviorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelBehaviorTests.swift; sourceTree = "<group>"; };
+		954B3DA924EA9DF54F648491 /* IPUpdaterPanel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPUpdaterPanel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A1A120D16D3D979707E09A1 /* IPUpdaterPanelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IPUpdaterPanelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C0A677D65D42C33100CFDD4 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		9C2B0F8D52D4C1716010F4D5 /* LaunchctlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchctlManager.swift; sourceTree = "<group>"; };
+		DAD4F211120C1E9CE80D6978 /* PanelApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelApp.swift; sourceTree = "<group>"; };
+		DB0DE51439DD2F6604DB4DCE /* StateManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagerProtocol.swift; sourceTree = "<group>"; };
+		DB54E7FD039651DB2161F4FD /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
+		E31B7A86781514FB194F7B35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		E49E87B76615C1C2D037F1A6 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		F368F094D55EEA973068B72F /* IPUpdaterAgent */ = {isa = PBXFileReference; includeInIndex = 0; path = IPUpdaterAgent; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7F7F5FC7680B1C1DC3F2D23 /* ConfigManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigManagerProtocol.swift; sourceTree = "<group>"; };
+		FC120437F0E914639C2D7A6B /* PanelConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelConfigManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		247B1FFE64989E96947123FA /* IPUpdaterPanelTests */ = {
+			isa = PBXGroup;
+			children = (
+				836CE4806B14DE0DA1BFBC45 /* PanelBehaviorTests.swift */,
+			);
+			path = IPUpdaterPanelTests;
+			sourceTree = "<group>";
+		};
+		2920AA66C8E29285993FBD62 /* IPUpdaterAgent */ = {
+			isa = PBXGroup;
+			children = (
+				524461D4C00D98C40CFC6F56 /* Agent.swift */,
+				E31B7A86781514FB194F7B35 /* Config.swift */,
+				F7F7F5FC7680B1C1DC3F2D23 /* ConfigManagerProtocol.swift */,
+				439EBECE68E0F862C373E5BA /* EmailSenderProtocol.swift */,
+				16636E0581084BB98C988815 /* main.swift */,
+				53BCFAF4C41AAA795995FB49 /* NetworkDetectorProtocol.swift */,
+				9C0A677D65D42C33100CFDD4 /* State.swift */,
+				DB54E7FD039651DB2161F4FD /* StateHistory.swift */,
+				DB0DE51439DD2F6604DB4DCE /* StateManagerProtocol.swift */,
+			);
+			path = IPUpdaterAgent;
+			sourceTree = "<group>";
+		};
+		56C21E73BCBD98BDF412AC86 /* IPUpdaterAgentTests */ = {
+			isa = PBXGroup;
+			children = (
+				0CA2E93D55D876471264E474 /* AgentBehaviorTests.swift */,
+				0CED3EF6DADAFA60AF5B1275 /* ConfigContractTests.swift */,
+				12087468E19217DF60560889 /* StateContractTests.swift */,
+			);
+			path = IPUpdaterAgentTests;
+			sourceTree = "<group>";
+		};
+		A9622F7D326B0CD9736F177F = {
+			isa = PBXGroup;
+			children = (
+				2920AA66C8E29285993FBD62 /* IPUpdaterAgent */,
+				56C21E73BCBD98BDF412AC86 /* IPUpdaterAgentTests */,
+				E19C296C73E4F7F0B08F20E8 /* IPUpdaterPanel */,
+				247B1FFE64989E96947123FA /* IPUpdaterPanelTests */,
+				BD338CEE531516EC89EB9E09 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BD338CEE531516EC89EB9E09 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F368F094D55EEA973068B72F /* IPUpdaterAgent */,
+				2B11F516B09BA22111964CA3 /* IPUpdaterAgentTests.xctest */,
+				954B3DA924EA9DF54F648491 /* IPUpdaterPanel.app */,
+				9A1A120D16D3D979707E09A1 /* IPUpdaterPanelTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E19C296C73E4F7F0B08F20E8 /* IPUpdaterPanel */ = {
+			isa = PBXGroup;
+			children = (
+				E49E87B76615C1C2D037F1A6 /* Config.swift */,
+				38BC289C00A4BE852D669849 /* KeychainManager.swift */,
+				9C2B0F8D52D4C1716010F4D5 /* LaunchctlManager.swift */,
+				DAD4F211120C1E9CE80D6978 /* PanelApp.swift */,
+				FC120437F0E914639C2D7A6B /* PanelConfigManager.swift */,
+				74A762A9192BDEFB2B74170D /* PanelView.swift */,
+				725EC156D911A841A859B511 /* PanelViewModel.swift */,
+			);
+			path = IPUpdaterPanel;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9F00C70B587D01F09CA4D35E /* IPUpdaterAgent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2C33E103FA1A85D9F298BC7 /* Build configuration list for PBXNativeTarget "IPUpdaterAgent" */;
+			buildPhases = (
+				01A59580D7D0418EE0637029 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IPUpdaterAgent;
+			packageProductDependencies = (
+			);
+			productName = IPUpdaterAgent;
+			productReference = F368F094D55EEA973068B72F /* IPUpdaterAgent */;
+			productType = "com.apple.product-type.tool";
+		};
+		AE053C4883FB8701503E79DF /* IPUpdaterPanel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C378AEF18D73586F500C67D /* Build configuration list for PBXNativeTarget "IPUpdaterPanel" */;
+			buildPhases = (
+				ABAE12C64052C24578FF66AF /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IPUpdaterPanel;
+			packageProductDependencies = (
+			);
+			productName = IPUpdaterPanel;
+			productReference = 954B3DA924EA9DF54F648491 /* IPUpdaterPanel.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C4A68A3E28E74134AE2241F3 /* IPUpdaterPanelTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F33E06A053CD8C4CC0F30400 /* Build configuration list for PBXNativeTarget "IPUpdaterPanelTests" */;
+			buildPhases = (
+				AFF2ECC4F58C299451C4C54C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9BE63617150C6C7C74687C99 /* PBXTargetDependency */,
+			);
+			name = IPUpdaterPanelTests;
+			packageProductDependencies = (
+			);
+			productName = IPUpdaterPanelTests;
+			productReference = 9A1A120D16D3D979707E09A1 /* IPUpdaterPanelTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E52E3EB98712A222897790CB /* IPUpdaterAgentTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE7089DFE7C71365658A178E /* Build configuration list for PBXNativeTarget "IPUpdaterAgentTests" */;
+			buildPhases = (
+				9EAADF2CE16C842F63CB4D1B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5331A5A777FE7F86DF91E590 /* PBXTargetDependency */,
+			);
+			name = IPUpdaterAgentTests;
+			packageProductDependencies = (
+			);
+			productName = IPUpdaterAgentTests;
+			productReference = 2B11F516B09BA22111964CA3 /* IPUpdaterAgentTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		197D3B15A7D848C59668A56C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 156DDEB7795F08290D90B8FF /* Build configuration list for PBXProject "IPUpdater" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = A9622F7D326B0CD9736F177F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9F00C70B587D01F09CA4D35E /* IPUpdaterAgent */,
+				E52E3EB98712A222897790CB /* IPUpdaterAgentTests */,
+				AE053C4883FB8701503E79DF /* IPUpdaterPanel */,
+				C4A68A3E28E74134AE2241F3 /* IPUpdaterPanelTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01A59580D7D0418EE0637029 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				206CCA028AD04E298A03B5AE /* Agent.swift in Sources */,
+				E3B19A8C83CEDDD8CFC299B5 /* Config.swift in Sources */,
+				A55CF5DAFC3557BD47EED2E5 /* ConfigManagerProtocol.swift in Sources */,
+				1C993F45B6E6D37FA0932783 /* EmailSenderProtocol.swift in Sources */,
+				B86186715721B382EAF42BEA /* NetworkDetectorProtocol.swift in Sources */,
+				FED61DFC813C50AD8F697654 /* State.swift in Sources */,
+				4B74E379F8E14903E7C90BDB /* StateHistory.swift in Sources */,
+				7F5F6D3DE53E82811BB1C40C /* StateManagerProtocol.swift in Sources */,
+				E1D5CBC422FF0A4C575D0A83 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EAADF2CE16C842F63CB4D1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C35221A19B71E60242A9FD07 /* AgentBehaviorTests.swift in Sources */,
+				DB4E50DAC771F4932B43DEFC /* ConfigContractTests.swift in Sources */,
+				2815D801675172D7DEB7146B /* StateContractTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABAE12C64052C24578FF66AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67AFEF67F788139A6F56C400 /* Config.swift in Sources */,
+				1C78D514D02EC9D25CC747C7 /* KeychainManager.swift in Sources */,
+				D3B435753C590D9C845ECCBA /* LaunchctlManager.swift in Sources */,
+				4643BEF2A7E0896B59852A7B /* PanelApp.swift in Sources */,
+				A27538DF547433AF63862E62 /* PanelConfigManager.swift in Sources */,
+				40B3D360B5CFD1B3CD2CDE5E /* PanelView.swift in Sources */,
+				0ED129A67BB82BFEE1138011 /* PanelViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AFF2ECC4F58C299451C4C54C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				583BFCC18690DCDCCF112355 /* PanelBehaviorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5331A5A777FE7F86DF91E590 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9F00C70B587D01F09CA4D35E /* IPUpdaterAgent */;
+			targetProxy = BCF11D3699FBFA2380340961 /* PBXContainerItemProxy */;
+		};
+		9BE63617150C6C7C74687C99 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AE053C4883FB8701503E79DF /* IPUpdaterPanel */;
+			targetProxy = ED78C94BA4655F93E903DD32 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		12FE5986AFB6A2226D6DE1C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = IPUpdaterPanel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.panel;
+				PRODUCT_NAME = IPUpdaterPanel;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		264DE31D042BACC648BFE4E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D TESTING";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.agentTests;
+				PRODUCT_NAME = IPUpdaterAgentTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		788B15701DA5E30F81B7440C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = IPUpdaterPanel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.panel;
+				PRODUCT_NAME = IPUpdaterPanel;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		7ABFE40E452FE2DF96FC30AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		84C649F6F4C196FCEE92767E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.agent;
+				PRODUCT_NAME = "ipupdater-agent";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		8E6B9FAD05BBCAE037DB6E43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AF374599E30AE42001243A4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.agent;
+				PRODUCT_NAME = "ipupdater-agent";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		C5708AD3ECDFE78247E522DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D TESTING";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.panelTests;
+				PRODUCT_NAME = IPUpdaterPanelTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IPUpdaterPanel.app/Contents/MacOS/IPUpdaterPanel";
+			};
+			name = Release;
+		};
+		D3E22E8B3C047347BCBABCD3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D TESTING";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.panelTests;
+				PRODUCT_NAME = IPUpdaterPanelTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IPUpdaterPanel.app/Contents/MacOS/IPUpdaterPanel";
+			};
+			name = Debug;
+		};
+		E41CA59734F43C45E71E1CD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D TESTING";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ipupdater.agentTests;
+				PRODUCT_NAME = IPUpdaterAgentTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		156DDEB7795F08290D90B8FF /* Build configuration list for PBXProject "IPUpdater" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8E6B9FAD05BBCAE037DB6E43 /* Debug */,
+				7ABFE40E452FE2DF96FC30AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5C378AEF18D73586F500C67D /* Build configuration list for PBXNativeTarget "IPUpdaterPanel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				788B15701DA5E30F81B7440C /* Debug */,
+				12FE5986AFB6A2226D6DE1C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A2C33E103FA1A85D9F298BC7 /* Build configuration list for PBXNativeTarget "IPUpdaterAgent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AF374599E30AE42001243A4B /* Debug */,
+				84C649F6F4C196FCEE92767E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AE7089DFE7C71365658A178E /* Build configuration list for PBXNativeTarget "IPUpdaterAgentTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				264DE31D042BACC648BFE4E9 /* Debug */,
+				E41CA59734F43C45E71E1CD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F33E06A053CD8C4CC0F30400 /* Build configuration list for PBXNativeTarget "IPUpdaterPanelTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3E22E8B3C047347BCBABCD3 /* Debug */,
+				C5708AD3ECDFE78247E522DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 197D3B15A7D848C59668A56C /* Project object */;
+}

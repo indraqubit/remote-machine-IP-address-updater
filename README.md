@@ -109,6 +109,15 @@ Code (implements to spec)
 
 ## Development (High Level)
 
+### Initial Setup
+
+**First time setup:**
+```bash
+./setup.sh          # Validates structure and shows setup instructions
+```
+
+This will guide you through creating the Xcode project and adding all source files.
+
 ### Building
 
 **Option 1: Auto Build (Command Line)**

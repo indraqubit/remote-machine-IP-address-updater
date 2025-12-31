@@ -91,8 +91,8 @@ class PanelViewModel: ObservableObject {
         emailError = nil
         
         // Store API key in keychain
-        let service = keychainManager.defaultService()
-        let account = keychainManager.defaultAccount()
+        let service = keychainManager.getDefaultService()
+        let account = keychainManager.getDefaultAccount()
         
         do {
             try keychainManager.store(apiKey: apiKey, service: service, account: account)

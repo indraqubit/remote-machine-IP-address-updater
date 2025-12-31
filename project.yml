@@ -1,0 +1,81 @@
+name: IPUpdater
+options:
+  bundleIdPrefix: com.ipupdater
+  deploymentTarget:
+    macOS: "13.0"
+  developmentLanguage: en
+  xcodeVersion: "15.0"
+
+targets:
+  IPUpdaterPanel:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: IPUpdaterPanel
+        excludes:
+          - "**/*.plist"
+    info:
+      path: IPUpdaterPanel/Info.plist
+      properties:
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        CFBundleIdentifier: com.ipupdater.panel
+        CFBundleName: IPUpdaterPanel
+        LSMinimumSystemVersion: "13.0"
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.ipupdater.panel
+      PRODUCT_NAME: IPUpdaterPanel
+      SWIFT_VERSION: "5.9"
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
+    scheme:
+      testTargets:
+        - IPUpdaterPanelTests
+
+  IPUpdaterAgent:
+    type: tool
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: IPUpdaterAgent
+    frameworks:
+      - SystemConfiguration
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.ipupdater.agent
+      PRODUCT_NAME: ipupdater-agent
+      SWIFT_VERSION: "5.9"
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
+    scheme:
+      testTargets:
+        - IPUpdaterAgentTests
+
+  IPUpdaterPanelTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: IPUpdaterPanelTests
+    dependencies:
+      - target: IPUpdaterPanel
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.ipupdater.panelTests
+      PRODUCT_NAME: IPUpdaterPanelTests
+      SWIFT_VERSION: "5.9"
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
+      OTHER_SWIFT_FLAGS: $(inherited) -D TESTING
+
+  IPUpdaterAgentTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: IPUpdaterAgentTests
+    dependencies:
+      - target: IPUpdaterAgent
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.ipupdater.agentTests
+      PRODUCT_NAME: IPUpdaterAgentTests
+      SWIFT_VERSION: "5.9"
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
+      OTHER_SWIFT_FLAGS: $(inherited) -D TESTING
+

@@ -30,19 +30,14 @@ class Agent {
     }
     
     func run() throws {
-        Logger.info("Agent started")
-        
         // Read config
         let config: Config
         do {
             config = try configManager.read()
-            Logger.debug("Config loaded successfully")
         } catch ConfigError.disabled {
             // Silent exit when disabled
-            Logger.info("Agent disabled, exiting")
             return
         } catch {
-            Logger.error("Failed to read config: \(error)")
             throw error
         }
         
@@ -50,10 +45,8 @@ class Agent {
         let ssid: String
         do {
             ssid = try networkDetector.detectWiFiSSID()
-            Logger.debug("Detected SSID: \(ssid)")
         } catch {
             // Silent exit on network error
-            Logger.warn("Failed to detect SSID: \(error)")
             return
         }
         
@@ -61,10 +54,8 @@ class Agent {
         let ip: String
         do {
             ip = try networkDetector.detectPrivateIPv4()
-            Logger.debug("Detected IP: \(ip)")
         } catch {
             // Silent exit on network error
-            Logger.warn("Failed to detect private IPv4: \(error)")
             return
         }
         
@@ -76,7 +67,6 @@ class Agent {
         var changeDetected = false
         
         if let previous = previousState {
-            Logger.debug("Previous state - SSID: \(previous.ssid), IP: \(previous.ip)")
             let ssidChanged = previous.ssid != ssid
             let ipChanged = previous.ip != ip
             
@@ -91,12 +81,9 @@ class Agent {
                 changeDetected = true
             } else {
                 // No change - exit silently
-                Logger.info("No change detected, exiting")
                 return
             }
-            Logger.info("Change detected: \(reason)")
         } else {
-            Logger.info("First run - no previous state")
             reason = "first_run"
             changeDetected = true
         }
@@ -104,14 +91,10 @@ class Agent {
         // Send email
         var emailSent = false
         do {
-            Logger.info("Sending email for \(config.email)")
             try emailSender.send(config: config, ssid: ssid, ip: ip)
-            Logger.info("Email sent successfully")
             emailSent = true
         } catch {
             // Silent failure - exit without updating state
-            Logger.error("Failed to send email: \(error)")
-            
             // Still record attempt in history
             let timestamp = ISO8601DateFormatter().string(from: Date())
             let entry = StateHistory.HistoryEntry(
@@ -143,8 +126,6 @@ class Agent {
             reason: reason
         )
         try? historyManager.append(entry)
-        
-        Logger.info("State persisted, history recorded, agent exiting")
     }
 }
 

@@ -1,4 +1,5 @@
 import Foundation
+import SystemConfiguration
 
 /// Protocol for Wi-Fi and network detection.
 /// Allows dependency injection and testing without system access.
@@ -28,16 +29,27 @@ class NetworkDetector: NetworkDetecting {
         }
         #endif
         
-        guard let interfaces = CNCopySupportedInterfaces() as? [String] else {
+        // Use SystemConfiguration to get current network SSID
+        guard let store = SCDynamicStoreCreate(kCFAllocatorDefault, "com.ipupdater.agent" as CFString, nil, nil) else {
             throw NetworkError.noInterfaces
         }
         
-        for interface in interfaces {
-            guard let info = CNCopyCurrentNetworkInfo(interface as CFString) as? [String: Any],
-                  let ssid = info[kCNNetworkInfoKeySSID as String] as? String else {
-                continue
+        let patterns = [
+            "State:/Network/Interface/[^/]+/IPv4" as CFString,
+            "State:/Network/Interface/[^/]+/AirPort" as CFString
+        ] as CFArray
+        
+        guard let dict = SCDynamicStoreCopyMultiple(store, nil, patterns) else {
+            throw NetworkError.noWiFi
+        }
+        
+        // Check AirPort interfaces
+        for (_, value) in dict as NSDictionary {
+            if let networkInfo = value as? NSDictionary {
+                if let ssid = networkInfo["SSID"] as? String {
+                    return ssid
+                }
             }
-            return ssid
         }
         
         throw NetworkError.noWiFi
@@ -181,3 +193,9 @@ class MockNetworkDetector: NetworkDetecting {
     }
 }
 #endif
+
+enum NetworkError: Error {
+    case noInterfaces
+    case noWiFi
+    case noPrivateIP
+}

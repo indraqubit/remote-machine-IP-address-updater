@@ -33,14 +33,21 @@ class StateManager: StateManaging {
             return try JSONDecoder().decode(State.self, from: data)
         } catch {
             // Corrupt state is ignored until next successful send
-            Logger.warn("State file corrupt, will overwrite on next success: \(error)")
+            // Will be overwritten on next successful email send
             return nil
         }
     }
     
     func write(_ state: State) throws {
         let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted]
         let data = try encoder.encode(state)
+        
+        // Ensure directory exists
+        let directory = stateURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
+        
+        // Atomic write
         try data.write(to: stateURL, options: .atomic)
     }
 }

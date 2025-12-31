@@ -59,11 +59,11 @@ class KeychainManager {
         return apiKey
     }
     
-    func defaultService() -> String {
+    func getDefaultService() -> String {
         return defaultService
     }
     
-    func defaultAccount() -> String {
+    func getDefaultAccount() -> String {
         return defaultAccount
     }
 }

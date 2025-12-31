@@ -3,7 +3,7 @@ import Foundation
 /// Tracks historical state changes for observability.
 /// Stored separately from current state to avoid bloating config.json reads.
 struct StateHistory: Codable {
-    let entries: [HistoryEntry]
+    var entries: [HistoryEntry]
     
     struct HistoryEntry: Codable {
         let timestamp: String // ISO-8601
@@ -52,8 +52,7 @@ class StateHistoryManager: StateHistoryManaging {
             let data = try Data(contentsOf: historyURL)
             return try JSONDecoder().decode(StateHistory.self, from: data)
         } catch {
-            // Corrupt history is ignored
-            Logger.warn("History file corrupt, starting fresh: \(error)")
+            // Corrupt history is ignored, starting fresh
             return StateHistory(entries: [])
         }
     }
