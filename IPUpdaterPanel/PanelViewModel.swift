@@ -7,6 +7,9 @@ class PanelViewModel: ObservableObject {
     @Published var notes: String = ""
     @Published var apiKey: String = ""
     @Published var emailError: String?
+    @Published var lastSSID: String?
+    @Published var lastIP: String?
+    @Published var lastChanged: String?
     
     private let configManager: PanelConfigManager
     private let keychainManager: KeychainManager
@@ -77,6 +80,40 @@ class PanelViewModel: ObservableObject {
             notes = ""
             apiKey = ""
             originalConfig = nil
+        }
+        
+        // Load last known state
+        loadLastState()
+    }
+    
+    private func loadLastState() {
+        let stateURL = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library")
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent("IPUpdater")
+            .appendingPathComponent("state.json")
+        
+        guard FileManager.default.fileExists(atPath: stateURL.path),
+              let data = try? Data(contentsOf: stateURL),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            lastSSID = nil
+            lastIP = nil
+            lastChanged = nil
+            return
+        }
+        
+        lastSSID = json["ssid"] as? String
+        lastIP = json["ip"] as? String
+        
+        if let timestamp = json["lastChanged"] as? String {
+            // Format timestamp for display (e.g., "2025-12-31 13:45:00")
+            if let date = ISO8601DateFormatter().date(from: timestamp) {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                lastChanged = formatter.string(from: date)
+            } else {
+                lastChanged = timestamp
+            }
         }
     }
     
@@ -168,6 +205,23 @@ class PanelViewModel: ObservableObject {
         
         emailError = nil
         
+        // Detect current network (fallback to test values if detection fails)
+        let networkDetector = NetworkDetector()
+        var ssid = "TEST_NETWORK"
+        var ip = "192.168.1.100"
+        
+        do {
+            ssid = try networkDetector.detectWiFiSSID()
+        } catch {
+            // Use fallback test SSID
+        }
+        
+        do {
+            ip = try networkDetector.detectPrivateIPv4()
+        } catch {
+            // Use fallback test IP
+        }
+        
         // Create test email sender
         let emailSender = EmailSender(apiKey: apiKey)
         let emails = parsedEmails
@@ -177,13 +231,13 @@ class PanelViewModel: ObservableObject {
                 for email in emails {
                     _ = try await emailSender.sendTestEmail(
                         to: email,
-                        ssid: "TEST_NETWORK",
-                        ip: "192.168.1.100",
+                        ssid: ssid,
+                        ip: ip,
                         metadata: Config.Metadata(label: label.isEmpty ? nil : label, notes: notes.isEmpty ? nil : notes)
                     )
                 }
                 DispatchQueue.main.async {
-                    self.emailError = "Test email sent successfully!"
+                    self.emailError = "Test email sent successfully to \(emails.count) recipient\(emails.count > 1 ? "s" : "")!"
                 }
             } catch {
                 DispatchQueue.main.async {
