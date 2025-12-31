@@ -129,13 +129,21 @@ Agent exits immediately after running. No logs by design (silent failure model).
 
 ### Test Email Fails
 - Verify Resend API key is correct and active
-- Check email addresses are valid
+- Check email addresses are valid (panel validates RFC 5322 format)
 - Ensure internet connection is active
+- Check spam folder (Resend may be flagged until domain is verified)
+- Check Resend dashboard at [resend.com/emails](https://resend.com/emails) for delivery status
 
 ### Agent Not Triggering
 - Verify enabled in Panel
 - Check `launchctl list | grep ipupdater` shows loaded
 - Trigger manually by changing Wi-Fi network
+- Verify agent has permissions (may need accessibility approval on first run)
+
+### API Key Not Persisting
+- Verify API key was entered in Panel before clicking Save
+- Panel stores key in macOS Keychain (not in config file)
+- Try removing old key: `security delete-generic-password -s "com.ipupdater.service" -a "resend-api-key"`
 
 ### Check Status
 ```bash
@@ -143,11 +151,23 @@ Agent exits immediately after running. No logs by design (silent failure model).
 launchctl list | grep ipupdater
 
 # Check configuration
-cat ~/.config/ipupdater/config.json
+cat ~/Library/Application\ Support/IPUpdater/config.json
 
 # Check last state
-cat ~/.config/ipupdater/state.json
+cat ~/Library/Application\ Support/IPUpdater/state.json
+
+# View email history
+cat ~/Library/Application\ Support/IPUpdater/history.json
+
+# Verify API key in Keychain
+security find-generic-password -s "com.ipupdater.service" -a "resend-api-key" -w
 ```
+
+### Known Limitations
+- **Wi-Fi only on en0:** Currently only detects en0 interface (Ethernet not supported)
+- **Single trigger per boot:** Agent runs once per system event; continuous changes may miss intermediate states
+- **No email retry:** Failed emails don't retry (by design—prevents spam on network errors)
+- **History grows unbounded:** Over months, `history.json` may grow large
 
 ---
 
@@ -183,7 +203,34 @@ let ip = try detector.detectPrivateIPv4()
 
 ---
 
+## Safety & Design
+
+### Silent Failure Model
+The agent is designed to **never** interrupt system operation:
+- No logging (no disk I/O)
+- No notifications (no UI popups)
+- No retries (fails fast)
+- Exits immediately after one decision
+
+If something fails, the agent silently exits. The system remains unaffected.
+
+### Email Security
+- API keys stored in **macOS Keychain** (encrypted, per-user)
+- Config file is readable (contains no secrets)
+- HTTPS only to Resend API
+- No local logs of sent emails
+
+### Recent Security Fixes (v2.1+)
+- ✅ Email send timeout (10s) — prevents agent hanging
+- ✅ RFC 5322 email validation — prevents invalid email formats
+- ✅ Improved error messages — better debugging
+
+See `CODE_REVIEW_BLINDSPOTS.md` for full security audit.
+
+---
+
 ## Support
 
 - **GitHub Issues:** [Create an issue](https://github.com/indraqubit/remote-machine-IP-address-updater/issues)
+- **Security Audit:** See `CODE_REVIEW_BLINDSPOTS.md` for known limitations
 - **Documentation:** See `DOCUMENTATION_INDEX.md` for full reference
