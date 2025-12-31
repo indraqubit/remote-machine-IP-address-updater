@@ -11,19 +11,24 @@ IP Updater is a macOS agent that monitors Wi-Fi network changes and sends email 
 
 ## Installation & Setup
 
-### 1. Install from Build
+### Quick Steps
+1. Build: `bash setup.sh`
+2. Open Panel: Open built app from Xcode DerivedData
+3. Configure: Enter email, API key
+4. **SAVE**: Must click Save to enable agent
+5. Done: Agent runs automatically on network changes
+
+### Manual Installation
 ```bash
 # Clone the repository
 git clone https://github.com/indraqubit/remote-machine-IP-address-updater.git
 cd remote-machine-IP-address-updater
 
-# Run auto-setup (installs xcodegen, generates Xcode project, builds)
+# Build (installs xcodegen, generates project)
 bash setup.sh
-```
 
-### 2. Locate Build Artifacts
-```bash
-~/Library/Developer/Xcode/DerivedData/IPUpdater-fauurzrrismjhcctmehbwlldnzjh/Build/Products/Debug/
+# Find the Panel app
+~/Library/Developer/Xcode/DerivedData/IPUpdater-*/Build/Products/Debug/IPUpdaterPanel.app
 ```
 
 ---
@@ -49,17 +54,29 @@ open ~/Library/Developer/Xcode/DerivedData/IPUpdater-fauurzrrismjhcctmehbwlldnzj
 
 ---
 
-## Agent Operation
+## How It Works
 
-### How It Works
-1. **On Wake/Wi-Fi Change** — Agent detects network changes
-2. **Reads Config** — Loads email addresses and API key from storage
-3. **Detects Network** — Gets current SSID and private IPv4 address
-4. **Validates** — Checks RFC1918 (private IP), rejects loopback/link-local
-5. **Compares** — If SSID or IP changed since last check:
-   - Sends email to all configured recipients
-   - Updates state file
-6. **Exit** — Process terminates (no polling, no background threads)
+### The Agent Cycle
+1. **Network change detected** — launchctl triggers agent
+2. **Config validated** — Reads email config from disk
+3. **Network detected** — Gets current SSID/IP
+4. **State compared** — Checks if SSID or IP changed since last email
+5. **Email sent** (if changed) — Sends to all configured recipients
+6. **State saved** — Updates last known network info
+7. **Exit** — Process terminates (no background threads, no polling)
+
+### Important: SAVE = Enable
+- **Before SAVE:** Config not loaded, agent not active
+- **After SAVE:** Config saved, agent loaded into launchctl
+- **Agent runs automatically** on network changes (after SAVE)
+- Test Email works anytime but doesn't count as a "state change"
+
+### Edge Cases Explained
+
+**Why didn't I get an email after changing networks?**
+- Agent only sends email if SSID or IP **changed** from last saved state
+- If you change network and it detects the same IP, no email sent
+- First network change after setup will send email (from "no state" → "first state")
 
 ### Install as LaunchAgent
 Panel automatically manages `launchctl` when you enable/disable the agent.
@@ -76,20 +93,37 @@ launchctl unload ~/Library/LaunchAgents/com.ipupdater.agent.plist
 
 ---
 
-## Testing
+## Testing & Troubleshooting
 
-### Test Email
-1. Open Panel
-2. Fill in email, API key
-3. Click **Test Email**
-4. Check inbox — should receive test notification
+### Test Email ≠ Real Email
+**Test Email:**
+- Shows your actual current IP/SSID
+- Sends immediately
+- Works anytime (doesn't require SAVE)
+- For verification only
 
-### Manual Agent Run
+**Real Email:**
+- Sent automatically by agent
+- Only when SSID or IP changes
+- Requires SAVE to enable agent
+- Requires network change to trigger
+
+### Verify Setup Works
+1. Open Panel and click **Test Email** → Should arrive in inbox
+2. Change Wi-Fi network (or Ethernet connection)
+3. Wait 10-30 seconds for agent to trigger
+4. Check inbox for email with new IP
+
+### Manual Test
 ```bash
-~/Library/Developer/Xcode/DerivedData/IPUpdater-fauurzrrismjhcctmehbwlldnzjh/Build/Products/Debug/ipupdater-agent
+# Manually run agent to test (shows detected IP/SSID)
+~/Library/Developer/Xcode/DerivedData/IPUpdater-*/Build/Products/Debug/ipupdater-agent
+
+# Check if state was saved
+cat ~/Library/Application\ Support/IPUpdater/state.json
 ```
 
-Agent exits immediately after running. No logs by design (silent failure model).
+**Note:** Manual run doesn't trigger via launchctl. Real emails happen automatically when network changes after SAVE.
 
 ---
 
