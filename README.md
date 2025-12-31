@@ -109,6 +109,15 @@ Code (implements to spec)
 
 ## Development (High Level)
 
+### Building
+
+**Option 1: Auto Build (Command Line)**
+```bash
+./build.sh          # Build both targets
+./build.sh test     # Build and run tests
+```
+
+**Option 2: Manual (Xcode)**
 1. Open the project in Xcode
 2. Build both targets
 3. Run tests before implementation changes
