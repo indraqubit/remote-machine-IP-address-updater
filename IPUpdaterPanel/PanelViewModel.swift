@@ -147,5 +147,44 @@ class PanelViewModel: ObservableObject {
         // Reload original state
         load()
     }
+    
+    func sendTestEmail() {
+        // Validate first
+        guard isEmailValid else {
+            emailError = "Invalid email address"
+            return
+        }
+        
+        guard !apiKey.isEmpty else {
+            emailError = "API key is required"
+            return
+        }
+        
+        emailError = nil
+        
+        // Create test email sender
+        let emailSender = EmailSender(apiKey: apiKey)
+        let emails = parsedEmails
+        
+        Task {
+            do {
+                for email in emails {
+                    _ = try await emailSender.sendTestEmail(
+                        to: email,
+                        ssid: "TEST_NETWORK",
+                        ip: "192.168.1.100",
+                        metadata: Config.Metadata(label: label.isEmpty ? nil : label, notes: notes.isEmpty ? nil : notes)
+                    )
+                }
+                DispatchQueue.main.async {
+                    self.emailError = "Test email sent successfully!"
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.emailError = "Failed to send test email: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
 }
 

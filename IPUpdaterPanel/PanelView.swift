@@ -58,7 +58,7 @@ struct PanelView: View {
             }
             .padding()
             
-            HStack(spacing: 20) {
+            HStack(spacing: 12) {
                 Button("Cancel") {
                     viewModel.cancel()
                     NSApplication.shared.terminate(nil)
@@ -66,6 +66,11 @@ struct PanelView: View {
                 .keyboardShortcut(.cancelAction)
                 
                 Spacer()
+                
+                Button("Test Email") {
+                    viewModel.sendTestEmail()
+                }
+                .disabled(!viewModel.enabled || viewModel.emailsText.isEmpty || viewModel.apiKey.isEmpty)
                 
                 Button("Save") {
                     if viewModel.save() {
