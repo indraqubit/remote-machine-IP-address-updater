@@ -3,13 +3,12 @@ import Foundation
 /// Protocol for sending emails.
 /// Allows dependency injection and testing without network access.
 protocol EmailSending {
-    /// Sends an email notification with network change details.
+    /// Sends an email notification with IP address change.
     /// - Parameters:
     ///   - config: Configuration containing email address and metadata
-    ///   - ssid: The Wi-Fi SSID
     ///   - ip: The private IPv4 address
     /// - Throws: EmailError if sending fails
-    func send(config: Config, ssid: String, ip: String) throws
+    func send(config: Config, ip: String) throws
 }
 
 // MARK: - Real Implementation
@@ -19,18 +18,16 @@ class EmailSender: EmailSending {
     #if DEBUG || TESTING
     var shouldSucceed: Bool = true
     var sendCalled: Bool = false
-    var lastSSID: String?
     var lastIP: String?
     #endif
-    
+
     private let apiURL = URL(string: "https://api.resend.com/emails")!
-    
-    func send(config: Config, ssid: String, ip: String) throws {
+
+    func send(config: Config, ip: String) throws {
         #if DEBUG || TESTING
         sendCalled = true
-        lastSSID = ssid
         lastIP = ip
-        
+
         if !shouldSucceed {
             throw EmailError.sendFailed
         }
@@ -49,11 +46,12 @@ class EmailSender: EmailSending {
         // Send to all recipients (all-or-nothing)
         for recipient in recipients {
             // Prepare email payload
+            let label = config.metadata?.label ?? "Machine"
             var payload: [String: Any] = [
                 "from": "IP Updater <noreply@resend.dev>",
                 "to": [recipient],
-                "subject": "IP Address Update: \(ssid)",
-                "html": generateEmailHTML(config: config, ssid: ssid, ip: ip)
+                "subject": "IP Address Update: \(label)",
+                "html": generateEmailHTML(config: config, ip: ip)
             ]
             
             let jsonData = try JSONSerialization.data(withJSONObject: payload)
@@ -116,29 +114,28 @@ class EmailSender: EmailSending {
         return apiKey
     }
     
-    private func generateEmailHTML(config: Config, ssid: String, ip: String) -> String {
+    private func generateEmailHTML(config: Config, ip: String) -> String {
         var html = """
         <html>
         <body>
         <h2>IP Address Update</h2>
-        <p><strong>SSID:</strong> \(ssid)</p>
         <p><strong>IP Address:</strong> \(ip)</p>
         """
-        
+
         if let label = config.metadata?.label {
-            html += "<p><strong>Label:</strong> \(label)</p>"
+            html += "<p><strong>Machine:</strong> \(label)</p>"
         }
-        
+
         if let notes = config.metadata?.notes {
             html += "<p><strong>Notes:</strong> \(notes)</p>"
         }
-        
+
         html += """
         <p><small>Sent at \(ISO8601DateFormatter().string(from: Date()))</small></p>
         </body>
         </html>
         """
-        
+
         return html
     }
 }
@@ -151,20 +148,18 @@ class MockEmailSender: EmailSending {
     var shouldSucceed: Bool = true
     var sendCalled: Bool = false
     var lastConfig: Config?
-    var lastSSID: String?
     var lastIP: String?
     var sendError: EmailError?
-    
-    func send(config: Config, ssid: String, ip: String) throws {
+
+    func send(config: Config, ip: String) throws {
         sendCalled = true
         lastConfig = config
-        lastSSID = ssid
         lastIP = ip
-        
+
         if let error = sendError {
             throw error
         }
-        
+
         if !shouldSucceed {
             throw EmailError.sendFailed
         }

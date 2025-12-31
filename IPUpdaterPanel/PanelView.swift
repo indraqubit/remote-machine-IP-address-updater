@@ -10,15 +10,13 @@ struct PanelView: View {
                 .padding(.top)
             
             // Current State Display
-            if let ssid = viewModel.lastSSID, let ip = viewModel.lastIP {
+            if let ip = viewModel.lastIP {
                 HStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Last Detected")
+                        Text("Last Known IP")
                             .font(.caption)
                             .foregroundColor(.secondary)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(ssid)
-                                .font(.system(.body, design: .monospaced))
                             Text(ip)
                                 .font(.system(.body, design: .monospaced))
                             if let changed = viewModel.lastChanged {

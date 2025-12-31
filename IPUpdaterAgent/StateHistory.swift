@@ -7,10 +7,9 @@ struct StateHistory: Codable {
     
     struct HistoryEntry: Codable {
         let timestamp: String // ISO-8601
-        let ssid: String
         let ip: String
         let emailSent: Bool
-        let reason: String // "first_run", "ssid_change", "ip_change", "both_change", "email_failed"
+        let reason: String // "first_run", "ip_change", "email_failed"
     }
     
     init(entries: [HistoryEntry] = []) {

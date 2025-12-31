@@ -59,10 +59,10 @@ open ~/Library/Developer/Xcode/DerivedData/IPUpdater-fauurzrrismjhcctmehbwlldnzj
 ### The Agent Cycle
 1. **Network change detected** — launchctl triggers agent
 2. **Config validated** — Reads email config from disk
-3. **Network detected** — Gets current SSID/IP
-4. **State compared** — Checks if SSID or IP changed since last email
+3. **Network detected** — Gets current private IPv4 address (en0 only)
+4. **State compared** — Checks if IP changed since last email
 5. **Email sent** (if changed) — Sends to all configured recipients
-6. **State saved** — Updates last known network info
+6. **State saved** — Updates last known IP address
 7. **Exit** — Process terminates (no background threads, no polling)
 
 ### Important: SAVE = Enable
@@ -74,9 +74,10 @@ open ~/Library/Developer/Xcode/DerivedData/IPUpdater-fauurzrrismjhcctmehbwlldnzj
 ### Edge Cases Explained
 
 **Why didn't I get an email after changing networks?**
-- Agent only sends email if SSID or IP **changed** from last saved state
-- If you change network and it detects the same IP, no email sent
+- Agent only sends email if **IP address changed** from last saved state
+- If you change network and get the same IP, no email sent
 - First network change after setup will send email (from "no state" → "first state")
+- Agent tracks IP only (SSID is not used for change detection)
 
 ### Install as LaunchAgent
 Panel automatically manages `launchctl` when you enable/disable the agent.
@@ -97,14 +98,14 @@ launchctl unload ~/Library/LaunchAgents/com.ipupdater.agent.plist
 
 ### Test Email ≠ Real Email
 **Test Email:**
-- Shows your actual current IP/SSID
+- Shows your actual current IP (and SSID for reference)
 - Sends immediately
 - Works anytime (doesn't require SAVE)
 - For verification only
 
 **Real Email:**
 - Sent automatically by agent
-- Only when SSID or IP changes
+- Only when IP address changes
 - Requires SAVE to enable agent
 - Requires network change to trigger
 
@@ -129,7 +130,7 @@ cat ~/Library/Application\ Support/IPUpdater/state.json
 
 ## Storage
 
-**Configuration:** `~/.config/ipupdater/config.json`
+**Configuration:** `~/Library/Application Support/IPUpdater/config.json`
 ```json
 {
   "version": 2,
@@ -146,12 +147,11 @@ cat ~/Library/Application\ Support/IPUpdater/state.json
 }
 ```
 
-**State File:** `~/.config/ipupdater/state.json`
+**State File:** `~/Library/Application Support/IPUpdater/state.json`
 ```json
 {
-  "ssid": "MyNetwork",
   "ip": "192.168.1.100",
-  "timestamp": "2025-12-31T13:00:00Z"
+  "lastChanged": "2025-12-31T13:00:00Z"
 }
 ```
 
@@ -231,8 +231,11 @@ try await sender.sendTestEmail(
 ### NetworkDetector
 ```swift
 let detector = NetworkDetector()
-let ssid = try detector.detectWiFiSSID()
+// Agent only detects IP (SSID removed per contract.md v1.1)
 let ip = try detector.detectPrivateIPv4()
+
+// Panel can detect SSID for UI display purposes only
+let ssid = try panelDetector.detectWiFiSSID()
 ```
 
 ---

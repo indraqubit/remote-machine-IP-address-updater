@@ -1,128 +1,32 @@
+# CONTRACT.md — REVISED (v1.1)
+
 ## Authority
 
-**This document is the SSOT for data contracts.**
-
-This document defines **immutable contracts** between system components.
-
-If code or tests contradict this document, the code is wrong.
-
-**Never edit this file to match code changes. Edit code to match this file.**
+Dokumen ini **menggantikan** kontrak sebelumnya terkait network identity.
+Jika ada konflik → **dokumen ini menang**.
 
 ---
 
-## CONFIG FILE CONTRACT
+## CONFIG FILE CONTRACT (UNCHANGED)
 
-### Location
-
-```
-~/Library/Application Support/IPUpdater/config.json
-```
-
----
-
-### Format
-
-* JSON
-* UTF-8
-* Written atomically
-* Full snapshot only
-
----
-
-### Structure (Authoritative)
+Tetap sama. **SSID TIDAK ADA DI CONFIG.**
 
 ```
 Config
-│
 ├─ version : Int
-│
 ├─ enabled : Bool
-│
-├─ emails : [String]  (version 2+)
-│ OR
-├─ email : String     (version 1, deprecated)
-│
+├─ email : String
 ├─ metadata
-│   ├─ label : String
-│   └─ notes : String
-│
+│  ├─ label : String
+│  └─ notes : String
 └─ keychain
-    ├─ service : String
-    └─ account : String
+   ├─ service : String
+   └─ account : String
 ```
 
 ---
 
-### Field Rules
-
-#### `version`
-
-* Mandatory
-* Current value: `2`
-* Unknown value → agent exits
-* Agent does not migrate
-* Version history:
-  - `1`: Single email address (deprecated)
-  - `2`: Multiple email addresses (current)
-
----
-
-#### `enabled`
-
-* Mandatory
-* `false` → agent exits immediately
-* No override logic
-
----
-
-#### `emails` (version 2+)
-
-* Mandatory
-* Non-empty array
-* At least one email
-* Panel validates format
-* Agent sends to all recipients
-
-#### `email` (version 1, deprecated)
-
-* Mandatory in v1
-* Non-empty string
-* Panel validates format
-* Agent trusts blindly
-* **Not used in v2+** (use `emails` instead)
-
----
-
-#### `metadata`
-
-* Optional
-* Informational only
-* Must not affect behavior
-
----
-
-#### `keychain`
-
-* Mandatory
-* Contains **references only**
-* No secrets allowed in config
-
----
-
-### Forbidden in Config
-
-```
-❌ SSID
-❌ IP address
-❌ Timestamps
-❌ Runtime state
-❌ Retry counters
-❌ Debug flags
-```
-
----
-
-## STATE FILE CONTRACT (AGENT ONLY)
+## STATE FILE CONTRACT (REVISED)
 
 ### Location
 
@@ -132,46 +36,75 @@ Config
 
 ---
 
-### Structure
+### Structure (Authoritative)
 
 ```
 State
 │
-├─ ssid : String
-│
-├─ ip   : String
+├─ ip : String
 │
 └─ lastChanged : ISO-8601 String
 ```
 
----
+### REMOVED ❌
+
+```
+ssid
+```
 
 ### Rules
 
-* Written only by agent
-* Never read or written by panel
+* State is **agent-owned**
+* Written only after **successful email**
 * Missing state = first run
-* Corrupt state → overwrite after successful email
+* Corrupt state = ignored until next success
 
 ---
 
-## CHANGE DETECTION CONTRACT
+## NETWORK IDENTITY CONTRACT (AGENT)
+
+### Definition
+
+**Network identity = private IPv4 address only.**
+
+SSID is **explicitly excluded** from agent logic.
+
+---
+
+### Accepted IP
+
+```
+- IPv4
+- RFC1918 only:
+  - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 192.168.0.0/16
+```
+
+### Rejected IP
+
+```
+- 127.0.0.1
+- 169.254.x.x
+- Public IPv4
+- IPv6
+```
+
+---
+
+## CHANGE DETECTION CONTRACT (REVISED)
 
 ### Trigger Condition
 
 ```
 Change detected if:
-  ssid != last.ssid
-   OR
-  ip   != last.ip
+  current.ip != last.ip
 ```
-
----
 
 ### Non-Triggers
 
 ```
-- Same SSID + same IP
+- Same IP
 - Invalid IP
 - Non-Wi-Fi interface
 - enabled == false
@@ -179,55 +112,58 @@ Change detected if:
 
 ---
 
-## NETWORK CONTRACT
+## WIFI SCOPE RULE (CLARIFIED)
 
-* Wi-Fi only
-* IPv4 only
-* RFC1918 only
-* Ignore:
+Agent operates under **Wi-Fi-only intent**, but:
 
-  * 127.0.0.1
-  * 169.254.x.x
+* Agent does **not** resolve SSID
+* Agent does **not** depend on SSID
+* Agent assumes:
+
+  * `en0` = Wi-Fi
+  * Non-`en0` → exit
+
+No fallback. No guessing.
 
 ---
 
-## EMAIL CONTRACT
+## EMAIL CONTRACT (UNCHANGED)
 
-* Sent only on change
-* One email per execution (per recipient)
-* Sent to all recipients in `emails` array
+* Sent only on IP change
+* One email per execution
 * HTTPS only
 * Resend REST API
-* No retries (all-or-nothing attempt)
-* Silent failure (all recipients or none)
+* No retries
+* Silent failure
 
 ---
 
-## OWNERSHIP SUMMARY
+## OWNERSHIP SUMMARY (UPDATED)
 
 ```
 Panel
   └─ config.json
+  └─ (optional) SSID display (UI only)
 
 Agent
-  └─ state.json
+  └─ state.json (ip only)
 
 Keychain
-  └─ API key (referenced only)
+  └─ API key
 ```
 
 ---
 
 ## IMMUTABILITY RULE
 
-If a proposed change requires:
+Any attempt to:
 
-* Adding a field → bump version
-* Changing meaning → bump version
-* Adding behavior → write tests first
+* Reintroduce SSID into agent
+* Use SSID as trigger
+* Depend on SystemConfiguration SSID keys
 
-No exceptions.
+→ **Reject change**
 
 ---
 
-**End of contract.**
+**End of CONTRACT.md (v1.1)**

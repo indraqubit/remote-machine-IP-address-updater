@@ -1,110 +1,43 @@
 import Foundation
-import SystemConfiguration
 
-/// Protocol for Wi-Fi and network detection.
-/// Allows dependency injection and testing without system access.
+/// Protocol for deterministic IPv4 detection.
+/// 
+/// Contract:
+/// - Returns private IPv4 (RFC1918) only
+/// - en0 interface only (Wi-Fi intent)
+/// - No SSID, no interface names, no metadata
+/// - Throws if guarantees cannot be met
+/// - Safe for headless LaunchAgent
 protocol NetworkDetecting {
-    /// Detects the current Wi-Fi SSID.
-    /// - Throws: NetworkError if detection fails
-    func detectWiFiSSID() throws -> String
-    
-    /// Detects the current private IPv4 address.
-    /// - Throws: NetworkError if detection fails
+    /// Detects current private IPv4 address.
+    ///
+    /// Guarantees:
+    /// - IPv4 format (dotted decimal)
+    /// - RFC1918 (10.x, 172.16-31.x, 192.168.x)
+    /// - Not loopback (127.0.0.1)
+    /// - Not link-local (169.254.x.x)
+    /// - Interface is UP and RUNNING
+    /// - en0 only
+    ///
+    /// - Throws: NetworkError if any guarantee cannot be met
     func detectPrivateIPv4() throws -> String
 }
 
-// MARK: - Real Implementation
+// MARK: - Production Implementation
 
-/// Production implementation using SystemConfiguration framework.
+/// Real NetworkDetector using system APIs.
+/// 
+/// - Uses getifaddrs for low-level interface enumeration
+/// - Validates RFC1918 before returning
+/// - Fails deterministically
 class NetworkDetector: NetworkDetecting {
-    #if DEBUG || TESTING
-    var mockSSID: String?
-    var mockIP: String?
-    #endif
-    
-    func detectWiFiSSID() throws -> String {
-        #if DEBUG || TESTING
-        if let mockSSID = mockSSID {
-            return mockSSID
-        }
-        #endif
-        
-        // Use SystemConfiguration to get current network SSID
-        guard let store = SCDynamicStoreCreate(kCFAllocatorDefault, "com.ipupdater.agent" as CFString, nil, nil) else {
-            throw NetworkError.noInterfaces
-        }
-        // Note: Swift auto-manages CF object lifetime
-        
-        let patterns = [
-            "State:/Network/Interface/[^/]+/IPv4" as CFString,
-            "State:/Network/Interface/[^/]+/AirPort" as CFString
-        ] as CFArray
-        
-        guard let dict = SCDynamicStoreCopyMultiple(store, nil, patterns) else {
-            // No Wi-Fi network found - check if we have Ethernet
-            return try detectActiveInterface()
-        }
-        
-        // Check AirPort interfaces
-        for (_, value) in dict as NSDictionary {
-            if let networkInfo = value as? NSDictionary {
-                if let ssid = networkInfo["SSID"] as? String {
-                    return ssid
-                }
-            }
-        }
-        
-        // No SSID found in Wi-Fi - try interface name
-        return try detectActiveInterface()
-    }
-    
-    private func detectActiveInterface() throws -> String {
-        var ifaddr: UnsafeMutablePointer<ifaddrs>?
-        guard getifaddrs(&ifaddr) == 0 else {
-            throw NetworkError.noInterfaces
-        }
-        defer { freeifaddrs(ifaddr) }
-        
-        var ptr = ifaddr
-        while ptr != nil {
-            defer { ptr = ptr?.pointee.ifa_next }
-            
-            guard let interface = ptr?.pointee,
-                  interface.ifa_addr != nil else {
-                continue
-            }
-            
-            let addrFamily = interface.ifa_addr.pointee.sa_family
-            if addrFamily != UInt8(AF_INET) {
-                continue
-            }
-            
-            let name = String(cString: interface.ifa_name)
-            guard name.hasPrefix("en") else {
-                continue
-            }
-            
-            // Found active en* interface - return it
-            return name == "en0" ? "Wi-Fi" : "Ethernet (\(name))"
-        }
-        
-        throw NetworkError.noWiFi
-    }
-    
     func detectPrivateIPv4() throws -> String {
-        #if DEBUG || TESTING
-        if let mockIP = mockIP {
-            return mockIP
-        }
-        #endif
-        
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>?
         
         guard getifaddrs(&ifaddr) == 0 else {
             throw NetworkError.noInterfaces
         }
-        
         defer { freeifaddrs(ifaddr) }
         
         var ptr = ifaddr
@@ -116,17 +49,25 @@ class NetworkDetector: NetworkDetecting {
                 continue
             }
             
+            // Only IPv4
             let addrFamily = interface.ifa_addr.pointee.sa_family
-            if addrFamily != UInt8(AF_INET) {
+            guard addrFamily == UInt8(AF_INET) else {
                 continue
             }
             
-            // Accept any en* interface (en0, en1, en2, etc.) - covers Wi-Fi and Ethernet
+            // en0 only (Wi-Fi intent)
             let name = String(cString: interface.ifa_name)
-            guard name.hasPrefix("en") else {
+            guard name == "en0" else {
                 continue
             }
             
+            // Must be UP and RUNNING
+            let flags = interface.ifa_flags
+            guard (flags & UInt32(IFF_UP)) != 0 && (flags & UInt32(IFF_RUNNING)) != 0 else {
+                continue
+            }
+            
+            // Extract address
             var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             let result = getnameinfo(
                 interface.ifa_addr,
@@ -161,12 +102,12 @@ class NetworkDetector: NetworkDetecting {
     }
     
     private func isValidPrivateIP(_ ip: String) -> Bool {
-        // Ignore loopback
+        // Reject loopback
         if ip == "127.0.0.1" {
             return false
         }
         
-        // Ignore link-local
+        // Reject link-local
         if ip.hasPrefix("169.254.") {
             return false
         }
@@ -177,7 +118,7 @@ class NetworkDetector: NetworkDetecting {
             return false
         }
         
-        let (a, b, c, d) = (parts[0], parts[1], parts[2], parts[3])
+        let (a, b, _, _) = (parts[0], parts[1], parts[2], parts[3])
         
         // 10.0.0.0/8
         if a == 10 {
@@ -202,24 +143,14 @@ class NetworkDetector: NetworkDetecting {
 
 #if DEBUG || TESTING
 /// Test double for NetworkDetecting.
+/// 
+/// Used only in test targets. Production code does not use this.
 class MockNetworkDetector: NetworkDetecting {
-    var ssidToReturn: String?
     var ipToReturn: String?
-    var ssidError: NetworkError?
-    var ipError: NetworkError?
-    
-    func detectWiFiSSID() throws -> String {
-        if let error = ssidError {
-            throw error
-        }
-        guard let ssid = ssidToReturn else {
-            throw NetworkError.noWiFi
-        }
-        return ssid
-    }
-    
+    var errorToThrow: NetworkError?
+
     func detectPrivateIPv4() throws -> String {
-        if let error = ipError {
+        if let error = errorToThrow {
             throw error
         }
         guard let ip = ipToReturn else {
@@ -232,6 +163,5 @@ class MockNetworkDetector: NetworkDetecting {
 
 enum NetworkError: Error {
     case noInterfaces
-    case noWiFi
     case noPrivateIP
 }

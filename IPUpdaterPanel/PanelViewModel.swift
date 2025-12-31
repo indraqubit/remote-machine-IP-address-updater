@@ -93,7 +93,7 @@ class PanelViewModel: ObservableObject {
             .appendingPathComponent("Application Support")
             .appendingPathComponent("IPUpdater")
             .appendingPathComponent("state.json")
-        
+
         guard FileManager.default.fileExists(atPath: stateURL.path),
               let data = try? Data(contentsOf: stateURL),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -102,10 +102,12 @@ class PanelViewModel: ObservableObject {
             lastChanged = nil
             return
         }
-        
-        lastSSID = json["ssid"] as? String
+
+        // Agent state only contains IP (SSID removed per contract.md v1.1)
+        // Panel can detect SSID separately for UI display if needed
+        lastSSID = nil  // No longer stored in state.json
         lastIP = json["ip"] as? String
-        
+
         if let timestamp = json["lastChanged"] as? String {
             // Format timestamp for display (e.g., "2025-12-31 13:45:00")
             if let date = ISO8601DateFormatter().date(from: timestamp) {

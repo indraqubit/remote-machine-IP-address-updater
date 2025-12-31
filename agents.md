@@ -1,123 +1,80 @@
+# agents.md — REVISED (v1.1)
+
 ## Purpose
 
-**This document is the SSOT for agent behavior.**
-
-Defines **all observable behaviors** of the background agent using
-**Given / When / Then** tables.
-
-If behavior is not listed here, the agent must **do nothing**.
-
-**Never edit this file to match code changes. Edit code to match this file.**
+Defines **all observable agent behavior**.
+Agent is **IP-change driven only**.
 
 ---
 
-## Agent Identity
+## Agent Identity (UNCHANGED)
 
-* Headless macOS LaunchAgent
-* Event-driven execution
+* Headless LaunchAgent
+* Event-driven
+* Short-lived
 * No UI
-* No resident loop
-* One execution = one decision = exit
+* Exit after decision
 
 ---
 
-## Preconditions (Global)
-
-These apply to **all** test cases.
-
-```
-- Running on macOS 13+
-- Triggered by system event (Wi-Fi change / wake / login)
-- Agent invoked once per trigger
-```
-
----
-
-## GIVEN / WHEN / THEN — CORE BEHAVIOR
+## GIVEN / WHEN / THEN — CORE BEHAVIOR (REVISED)
 
 ### 1. Disabled Agent
 
-| Given                  | When              | Then             |
-| ---------------------- | ----------------- | ---------------- |
-| config.enabled = false | Agent starts      | Exit immediately |
-| config.enabled = false | Wi-Fi changes     | Exit immediately |
-| config.enabled = false | State file exists | State untouched  |
-| config.enabled = false | Any error occurs  | Silent exit      |
+| Given                  | When         | Then             |
+| ---------------------- | ------------ | ---------------- |
+| config.enabled = false | Agent starts | Exit immediately |
 
 ---
 
 ### 2. Missing / Invalid Config
 
+| Given           | When         | Then |
+| --------------- | ------------ | ---- |
+| Config missing  | Agent starts | Exit |
+| Config invalid  | Agent starts | Exit |
+| Unknown version | Agent starts | Exit |
+| Email empty     | Agent starts | Exit |
+
+---
+
+### 3. Network Preconditions (REVISED)
+
 | Given                  | When         | Then |
 | ---------------------- | ------------ | ---- |
-| Config file missing    | Agent starts | Exit |
-| Config JSON invalid    | Agent starts | Exit |
-| Config.version unknown | Agent starts | Exit |
-| Email empty            | Agent starts | Exit |
-| Keychain ref missing   | Agent starts | Exit |
+| Active interface ≠ en0 | Agent starts | Exit |
+| IPv4 unavailable       | Agent starts | Exit |
+| IPv4 invalid           | Agent starts | Exit |
+| IPv4 not RFC1918       | Agent starts | Exit |
 
 ---
 
-### 3. Network Preconditions
+### 4. First Run
 
-| Given                          | When         | Then |
-| ------------------------------ | ------------ | ---- |
-| Active interface ≠ Wi-Fi       | Agent starts | Exit |
-| Wi-Fi active, SSID unavailable | Agent starts | Exit |
-| IPv4 unavailable               | Agent starts | Exit |
-| IP = 127.0.0.1                 | Agent starts | Exit |
-| IP = 169.254.x.x               | Agent starts | Exit |
-| IP not RFC1918                 | Agent starts | Exit |
-
----
-
-### 4. First Run (No State)
-
-| Given         | When            | Then                   |
-| ------------- | --------------- | ---------------------- |
-| No state file | Valid SSID + IP | Send email             |
-| No state file | Email sent      | Write state            |
-| No state file | Email fails     | Exit, no state written |
+| Given          | When               | Then           |
+| -------------- | ------------------ | -------------- |
+| No state file  | Valid private IPv4 | Send email     |
+| Email succeeds | —                  | Write state    |
+| Email fails    | —                  | Exit, no state |
 
 ---
 
 ### 5. No Change Detected
 
-| Given             | When          | Then            |
-| ----------------- | ------------- | --------------- |
-| SSID == last.ssid | IP == last.ip | Exit            |
-| State unchanged   | Agent runs    | No email        |
-| State unchanged   | Agent runs    | State untouched |
+| Given                 | When       | Then     |
+| --------------------- | ---------- | -------- |
+| current.ip == last.ip | Agent runs | Exit     |
+| State unchanged       | —          | No email |
 
 ---
 
-### 6. IP Change Only
+### 6. IP Change Detected
 
-| Given             | When          | Then                  |
-| ----------------- | ------------- | --------------------- |
-| SSID == last.ssid | IP != last.ip | Send email            |
-| Email succeeds    | —             | Update state          |
-| Email fails       | —             | Exit, state unchanged |
-
----
-
-### 7. SSID Change Only
-
-| Given             | When          | Then                  |
-| ----------------- | ------------- | --------------------- |
-| SSID != last.ssid | IP == last.ip | Send email            |
-| Email succeeds    | —             | Update state          |
-| Email fails       | —             | Exit, state unchanged |
-
----
-
-### 8. SSID + IP Change
-
-| Given             | When          | Then                  |
-| ----------------- | ------------- | --------------------- |
-| SSID != last.ssid | IP != last.ip | Send email            |
-| Email succeeds    | —             | Update state          |
-| Email fails       | —             | Exit, state unchanged |
+| Given                 | When       | Then                  |
+| --------------------- | ---------- | --------------------- |
+| current.ip != last.ip | Agent runs | Send email            |
+| Email succeeds        | —          | Update state          |
+| Email fails           | —          | Exit, state unchanged |
 
 ---
 
@@ -132,8 +89,7 @@ When an email is sent:
 - Resend REST API
 - Includes:
   - email
-  - SSID
-  - IP
+  - ip
   - metadata.label (if present)
   - metadata.notes (if present)
 ```
@@ -155,42 +111,33 @@ No queueing.
 
 ---
 
+## EXPLICIT NON-BEHAVIORS (UPDATED)
+
+The agent must NEVER:
+
+```
+- Resolve SSID
+- Depend on SSID
+- Compare SSID
+- Store SSID
+- Guess network type
+- Fall back to Ethernet
+- Retry
+- Poll
+```
+
+---
+
 ## EXIT RULE (FINAL)
 
 Every test case must end in:
 
 ```
-Process exit
-No background activity
-No observers left alive
+exit(0)
 ```
 
-If execution does not exit → **bug**.
+No resident behavior.
 
 ---
 
-## NON-BEHAVIORS (EXPLICITLY FORBIDDEN)
-
-The agent must NEVER:
-
-```
-- Poll
-- Retry
-- Log verbosely
-- Spawn threads unnecessarily
-- Cache config
-- Modify config
-- Notify user locally
-```
-
----
-
-## TDD DIRECTIVE
-
-* Each table row → at least one test
-* Tests written BEFORE implementation
-* No test → no behavior
-
----
-
-**End of agents.md**
+**End of agents.md (v1.1)**

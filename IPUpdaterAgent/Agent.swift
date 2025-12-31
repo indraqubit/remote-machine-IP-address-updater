@@ -41,15 +41,6 @@ class Agent {
             throw error
         }
         
-        // Detect Wi-Fi SSID
-        let ssid: String
-        do {
-            ssid = try networkDetector.detectWiFiSSID()
-        } catch {
-            // Silent exit on network error
-            return
-        }
-        
         // Detect private IPv4
         let ip: String
         do {
@@ -65,18 +56,11 @@ class Agent {
         // Check if change detected
         var reason: String = "unknown"
         var changeDetected = false
-        
+
         if let previous = previousState {
-            let ssidChanged = previous.ssid != ssid
             let ipChanged = previous.ip != ip
-            
-            if ssidChanged && ipChanged {
-                reason = "both_change"
-                changeDetected = true
-            } else if ssidChanged {
-                reason = "ssid_change"
-                changeDetected = true
-            } else if ipChanged {
+
+            if ipChanged {
                 reason = "ip_change"
                 changeDetected = true
             } else {
@@ -91,7 +75,7 @@ class Agent {
         // Send email
         var emailSent = false
         do {
-            try emailSender.send(config: config, ssid: ssid, ip: ip)
+            try emailSender.send(config: config, ip: ip)
             emailSent = true
         } catch {
             // Silent failure - exit without updating state
@@ -99,7 +83,6 @@ class Agent {
             let timestamp = ISO8601DateFormatter().string(from: Date())
             let entry = StateHistory.HistoryEntry(
                 timestamp: timestamp,
-                ssid: ssid,
                 ip: ip,
                 emailSent: false,
                 reason: reason
@@ -110,17 +93,15 @@ class Agent {
         
         // Write state only after successful email
         let newState = State(
-            ssid: ssid,
             ip: ip,
             lastChanged: ISO8601DateFormatter().string(from: Date())
         )
         try stateManager.write(newState)
-        
+
         // Record success in history
         let timestamp = ISO8601DateFormatter().string(from: Date())
         let entry = StateHistory.HistoryEntry(
             timestamp: timestamp,
-            ssid: ssid,
             ip: ip,
             emailSent: emailSent,
             reason: reason

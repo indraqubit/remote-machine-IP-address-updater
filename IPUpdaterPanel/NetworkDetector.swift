@@ -1,7 +1,10 @@
 import Foundation
 import SystemConfiguration
 
-/// Minimal network detector for Panel (mirrors Agent's NetworkDetector)
+/// Panel network detector - can include SSID for UI display.
+/// 
+/// Note: This is separate from Agent's NetworkDetecting.
+/// Panel is allowed to have UI metadata. Agent is not.
 class NetworkDetector {
     func detectWiFiSSID() throws -> String {
         guard let store = SCDynamicStoreCreate(kCFAllocatorDefault, "com.ipupdater.panel" as CFString, nil, nil) else {
@@ -14,7 +17,6 @@ class NetworkDetector {
         ] as CFArray
         
         guard let dict = SCDynamicStoreCopyMultiple(store, nil, patterns) else {
-            // No Wi-Fi network found - check if we have Ethernet
             return try detectActiveInterface()
         }
         
@@ -26,7 +28,6 @@ class NetworkDetector {
             }
         }
         
-        // No SSID found in Wi-Fi - try interface name
         return try detectActiveInterface()
     }
     
@@ -56,7 +57,11 @@ class NetworkDetector {
                 continue
             }
             
-            // Found active en* interface - return it
+            let flags = interface.ifa_flags
+            guard (flags & UInt32(IFF_UP)) != 0 && (flags & UInt32(IFF_RUNNING)) != 0 else {
+                continue
+            }
+
             return name == "en0" ? "Wi-Fi" : "Ethernet (\(name))"
         }
         
@@ -88,11 +93,15 @@ class NetworkDetector {
             }
             
             let name = String(cString: interface.ifa_name)
-            // Accept any en* interface (en0, en1, en2, etc.) - covers Wi-Fi and Ethernet
             guard name.hasPrefix("en") else {
                 continue
             }
             
+            let flags = interface.ifa_flags
+            guard (flags & UInt32(IFF_UP)) != 0 && (flags & UInt32(IFF_RUNNING)) != 0 else {
+                continue
+            }
+
             var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             let result = getnameinfo(
                 interface.ifa_addr,
@@ -110,7 +119,6 @@ class NetworkDetector {
             
             let ip = String(cString: hostname)
             
-            // Validate RFC1918
             guard isValidPrivateIP(ip) else {
                 continue
             }
