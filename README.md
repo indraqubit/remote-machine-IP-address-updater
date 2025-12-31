@@ -82,21 +82,43 @@ There is **no runtime coupling** between Panel and Agent.
 
 ---
 
+## Single Source of Truth (SSOT)
+
+**This project uses specification-first development.**
+
+The **three authoritative documents** are the SSOT:
+
+1. **`agents.md`** — All observable behaviors (Given/When/Then tables)
+2. **`contract.md`** — Immutable data contracts & ownership rules
+3. **`architecture.md`** — System design & separation invariants
+
+**Authority Hierarchy:**
+```
+Docs (SSOT)
+  ↓
+Tests (validate conformance)
+  ↓
+Code (implements to spec)
+```
+
+**Decision Rule:** If code contradicts the docs, **the code is wrong**. Never invert this.
+
+**Full explanation:** See `SSOT.md`
+
+---
+
 ## Development (High Level)
 
 1. Open the project in Xcode
 2. Build both targets
 3. Run tests before implementation changes
 
-Detailed behavior is defined in:
-
-```
-ARCHITECTURE.md
-CONTRACT.md
-agents.md
-panel.md
-rules.md
-```
+**Before writing code:**
+- Read `agents.md` for the behavior you're implementing
+- Read `contract.md` for the data shapes involved
+- Read `architecture.md` for separation constraints
+- Write tests that validate the spec
+- Then implement
 
 If code contradicts these documents, **the code is wrong**.
 

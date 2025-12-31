@@ -1,10 +1,13 @@
-
 ## Purpose
+
+**This document is the SSOT for agent behavior.**
 
 Defines **all observable behaviors** of the background agent using
 **Given / When / Then** tables.
 
 If behavior is not listed here, the agent must **do nothing**.
+
+**Never edit this file to match code changes. Edit code to match this file.**
 
 ---
 

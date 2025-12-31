@@ -1,10 +1,12 @@
-
-
 ## Authority
+
+**This document is the SSOT for data contracts.**
 
 This document defines **immutable contracts** between system components.
 
 If code or tests contradict this document, the code is wrong.
+
+**Never edit this file to match code changes. Edit code to match this file.**
 
 ---
 

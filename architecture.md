@@ -1,5 +1,16 @@
-
 # ARCHITECTURE.md
+
+## Authority
+
+**This document is the SSOT for system architecture.**
+
+This document defines the design invariants and separation constraints.
+
+If code violates these invariants, the code is wrong.
+
+**Never edit this file to match code changes. Edit code to match this file.**
+
+---
 
 ## System Overview
 
