@@ -11,9 +11,26 @@ SCHEME_PANEL="IPUpdaterPanel"
 SCHEME_AGENT="IPUpdaterAgent"
 DESTINATION="platform=macOS"
 RUN_TESTS="${1:-}"
+INFO_PLIST="IPUpdaterPanel/Info.plist"
 
 echo "Building IPUpdater project..."
 echo ""
+
+# Get current build number and increment
+if [ -f "${INFO_PLIST}" ]; then
+    CURRENT_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "${INFO_PLIST}" 2>/dev/null || echo "1")
+    NEW_BUILD=$((CURRENT_BUILD + 1))
+    /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${NEW_BUILD}" "${INFO_PLIST}" 2>/dev/null || true
+    
+    # Get git commit hash (if available)
+    GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+    
+    echo "Build metadata:"
+    echo "  Version: $(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "${INFO_PLIST}" 2>/dev/null || echo "1.0")"
+    echo "  Build: ${NEW_BUILD}"
+    echo "  Git commit: ${GIT_COMMIT}"
+    echo ""
+fi
 
 # Build Panel
 echo "Building Panel target..."
