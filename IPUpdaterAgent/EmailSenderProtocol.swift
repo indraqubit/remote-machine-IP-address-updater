@@ -65,7 +65,7 @@ class EmailSender: EmailSending {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = jsonData
             
-            // Send synchronously (agent is short-lived)
+            // Send synchronously with timeout (agent is short-lived)
             let semaphore = DispatchSemaphore(value: 0)
             var responseError: Error?
             
@@ -80,7 +80,15 @@ class EmailSender: EmailSending {
             }
             
             task.resume()
-            semaphore.wait()
+            
+            // Wait with 10-second timeout to prevent agent hanging
+            let timeout = DispatchTime.now() + .seconds(10)
+            let waitResult = semaphore.wait(timeout: timeout)
+            
+            if waitResult == .timedOut {
+                task.cancel()
+                throw EmailError.sendFailed
+            }
             
             if let error = responseError {
                 throw error

@@ -39,9 +39,15 @@ class PanelViewModel: ObservableObject {
         return emails.allSatisfy { isValidEmail($0) }
     }
     
-    /// Simple email validation.
+    /// Email validation using basic RFC 5322 checks.
     private func isValidEmail(_ email: String) -> Bool {
-        email.contains("@") && email.contains(".")
+        let pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            // Fallback to simple check if regex fails
+            return email.contains("@") && email.contains(".")
+        }
+        let range = NSRange(email.startIndex..<email.endIndex, in: email)
+        return regex.firstMatch(in: email, range: range) != nil
     }
     
     func load() {

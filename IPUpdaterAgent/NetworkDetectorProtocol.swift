@@ -33,6 +33,7 @@ class NetworkDetector: NetworkDetecting {
         guard let store = SCDynamicStoreCreate(kCFAllocatorDefault, "com.ipupdater.agent" as CFString, nil, nil) else {
             throw NetworkError.noInterfaces
         }
+        // Note: Swift auto-manages CF object lifetime
         
         let patterns = [
             "State:/Network/Interface/[^/]+/IPv4" as CFString,

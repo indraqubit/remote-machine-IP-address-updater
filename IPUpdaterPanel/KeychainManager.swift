@@ -11,12 +11,6 @@ class KeychainManager {
     private let defaultAccount = "resend-api-key"
     
     func store(apiKey: String, service: String, account: String) throws {
-        #if DEBUG || TESTING
-        storeCalled = true
-        lastKey = apiKey
-        return
-        #endif
-        
         // Delete existing item if present
         let deleteQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -37,6 +31,11 @@ class KeychainManager {
         guard status == errSecSuccess else {
             throw KeychainError.storeFailed
         }
+        
+        #if DEBUG || TESTING
+        storeCalled = true
+        lastKey = apiKey
+        #endif
     }
     
     func retrieve(service: String, account: String) throws -> String {
