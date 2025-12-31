@@ -53,7 +53,8 @@ class NetworkDetector {
             }
             
             let name = String(cString: interface.ifa_name)
-            if name != "en0" {
+            // Accept any en* interface (en0, en1, en2, etc.) - covers Wi-Fi and Ethernet
+            guard name.hasPrefix("en") else {
                 continue
             }
             

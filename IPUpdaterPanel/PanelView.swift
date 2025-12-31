@@ -57,6 +57,15 @@ struct PanelView: View {
                                 .font(.caption)
                                 .foregroundColor(.red)
                         }
+                        
+                        if let status = viewModel.testEmailStatus {
+                            Text(status)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .padding(8)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(4)
+                        }
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {

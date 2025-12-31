@@ -10,6 +10,7 @@ class PanelViewModel: ObservableObject {
     @Published var lastSSID: String?
     @Published var lastIP: String?
     @Published var lastChanged: String?
+    @Published var testEmailStatus: String?  // For test email feedback
     
     private let configManager: PanelConfigManager
     private let keychainManager: KeychainManager
@@ -194,32 +195,36 @@ class PanelViewModel: ObservableObject {
     func sendTestEmail() {
         // Validate first
         guard isEmailValid else {
-            emailError = "Invalid email address"
+            testEmailStatus = "Invalid email address"
             return
         }
         
         guard !apiKey.isEmpty else {
-            emailError = "API key is required"
+            testEmailStatus = "API key is required"
             return
         }
         
-        emailError = nil
+        testEmailStatus = nil
         
         // Detect current network (fallback to test values if detection fails)
         let networkDetector = NetworkDetector()
         var ssid = "TEST_NETWORK"
         var ip = "192.168.1.100"
+        var detectionError = ""
         
         do {
             ssid = try networkDetector.detectWiFiSSID()
         } catch {
-            // Use fallback test SSID
+            detectionError = "SSID detection failed: \(error)"
         }
         
         do {
             ip = try networkDetector.detectPrivateIPv4()
         } catch {
-            // Use fallback test IP
+            if !detectionError.isEmpty {
+                detectionError += "; "
+            }
+            detectionError += "IP detection failed: \(error)"
         }
         
         // Create test email sender
@@ -237,11 +242,19 @@ class PanelViewModel: ObservableObject {
                     )
                 }
                 DispatchQueue.main.async {
-                    self.emailError = "Test email sent successfully to \(emails.count) recipient\(emails.count > 1 ? "s" : "")!"
+                    var message = "✓ Test email sent successfully!\n"
+                    message += "SSID: \(ssid)\n"
+                    message += "IP: \(ip)"
+                    
+                    if !detectionError.isEmpty {
+                        message += "\n\n⚠️ Detection issue:\n\(detectionError)"
+                    }
+                    
+                    self.testEmailStatus = message
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.emailError = "Failed to send test email: \(error.localizedDescription)"
+                    self.testEmailStatus = "✗ Failed to send: \(error.localizedDescription)"
                 }
             }
         }
