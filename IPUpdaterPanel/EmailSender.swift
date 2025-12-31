@@ -33,13 +33,18 @@ class EmailSender {
         request.httpBody = jsonData
         
         // Send request
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NSError(domain: "EmailError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
         }
         
         guard 200..<300 ~= httpResponse.statusCode else {
+            // Try to decode error response for better debugging
+            if let errorJSON = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let message = errorJSON["message"] as? String {
+                throw NSError(domain: "EmailError", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode): \(message)"])
+            }
             throw NSError(domain: "EmailError", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"])
         }
     }

@@ -12,6 +12,7 @@
 		1C993F45B6E6D37FA0932783 /* EmailSenderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439EBECE68E0F862C373E5BA /* EmailSenderProtocol.swift */; };
 		206CCA028AD04E298A03B5AE /* Agent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524461D4C00D98C40CFC6F56 /* Agent.swift */; };
 		2815D801675172D7DEB7146B /* StateContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12087468E19217DF60560889 /* StateContractTests.swift */; };
+		3D54C0124E98191B0BFE489F /* EmailSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04AEDDB6E94B535512DFCD1 /* EmailSender.swift */; };
 		40B3D360B5CFD1B3CD2CDE5E /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A762A9192BDEFB2B74170D /* PanelView.swift */; };
 		4643BEF2A7E0896B59852A7B /* PanelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD4F211120C1E9CE80D6978 /* PanelApp.swift */; };
 		4B74E379F8E14903E7C90BDB /* StateHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB54E7FD039651DB2161F4FD /* StateHistory.swift */; };
@@ -68,6 +69,7 @@
 		DB54E7FD039651DB2161F4FD /* StateHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateHistory.swift; sourceTree = "<group>"; };
 		E31B7A86781514FB194F7B35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		E49E87B76615C1C2D037F1A6 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		F04AEDDB6E94B535512DFCD1 /* EmailSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSender.swift; sourceTree = "<group>"; };
 		F368F094D55EEA973068B72F /* IPUpdaterAgent */ = {isa = PBXFileReference; includeInIndex = 0; path = IPUpdaterAgent; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7F7F5FC7680B1C1DC3F2D23 /* ConfigManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigManagerProtocol.swift; sourceTree = "<group>"; };
 		FC120437F0E914639C2D7A6B /* PanelConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelConfigManager.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				E49E87B76615C1C2D037F1A6 /* Config.swift */,
+				F04AEDDB6E94B535512DFCD1 /* EmailSender.swift */,
 				38BC289C00A4BE852D669849 /* KeychainManager.swift */,
 				9C2B0F8D52D4C1716010F4D5 /* LaunchctlManager.swift */,
 				DAD4F211120C1E9CE80D6978 /* PanelApp.swift */,
@@ -280,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67AFEF67F788139A6F56C400 /* Config.swift in Sources */,
+				3D54C0124E98191B0BFE489F /* EmailSender.swift in Sources */,
 				1C78D514D02EC9D25CC747C7 /* KeychainManager.swift in Sources */,
 				D3B435753C590D9C845ECCBA /* LaunchctlManager.swift in Sources */,
 				4643BEF2A7E0896B59852A7B /* PanelApp.swift in Sources */,
